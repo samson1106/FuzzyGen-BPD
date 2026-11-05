@@ -1,0 +1,212 @@
+{
+  "status": "SYNTHETIC DEMONSTRATION ONLY; NOT PATCH EVAL OR VUL4J RESULTS",
+  "data_seed": 2026,
+  "candidate_count": 242,
+  "program_count": 60,
+  "label_counts": {
+    "unacceptable_0": 121,
+    "acceptable_1": 121
+  },
+  "optimized": {
+    "macro_f1": 0.7104273504273504,
+    "precision": 0.7256637168141593,
+    "recall": 0.6776859504132231,
+    "specificity": 0.743801652892562,
+    "mcc": 0.42241185599556075,
+    "confusion_matrix": [
+      [
+        90,
+        31
+      ],
+      [
+        39,
+        82
+      ]
+    ]
+  },
+  "equal_weight_baseline": {
+    "macro_f1": 0.7146372724942323,
+    "precision": 0.7280701754385965,
+    "recall": 0.6859504132231405,
+    "specificity": 0.743801652892562,
+    "mcc": 0.43047301604613925,
+    "confusion_matrix": [
+      [
+        90,
+        31
+      ],
+      [
+        38,
+        83
+      ]
+    ]
+  },
+  "top1_accuracy_optimized": 0.7666666666666667,
+  "top1_accuracy_equal_weight": 0.7666666666666667,
+  "ranking_optimized": {
+    "top1": 0.7666666666666667,
+    "mrr": 0.8430555555555556,
+    "ndcg": 0.8607846039121649
+  },
+  "ranking_equal_weight": {
+    "top1": 0.7666666666666667,
+    "mrr": 0.8430555555555556,
+    "ndcg": 0.8607242458277119
+  },
+  "cluster_bootstrap_95_ci": {
+    "macro_f1": [
+      0.6449655706409917,
+      0.7717934936677183
+    ],
+    "top1": [
+      0.6666666666666666,
+      0.8666666666666667
+    ],
+    "mrr": [
+      0.7652777777777777,
+      0.9153124999999999
+    ],
+    "ndcg": [
+      0.7956013989734542,
+      0.9195871745007703
+    ]
+  },
+  "equal_weight_cluster_bootstrap_95_ci": {
+    "macro_f1": [
+      0.6630571692348594,
+      0.7649846225877561
+    ],
+    "top1": [
+      0.65,
+      0.8666666666666667
+    ],
+    "mrr": [
+      0.7583333333333333,
+      0.9166666666666666
+    ],
+    "ndcg": [
+      0.7887736707676246,
+      0.9194991836392165
+    ]
+  },
+  "paired_program_comparison_optimized_minus_equal": {
+    "macro_f1": {
+      "mean_delta": 0.0034920634920634934,
+      "cluster_bootstrap_95_ci": [
+        -0.024761904761904756,
+        0.03198412698412698
+      ],
+      "paired_sign_flip_p": 0.8032196780321967
+    },
+    "top1": {
+      "mean_delta": 0.0,
+      "cluster_bootstrap_95_ci": [
+        0.0,
+        0.0
+      ],
+      "paired_sign_flip_p": 1.0
+    }
+  },
+  "fold_macro_f1_mean": 0.7072416849142527,
+  "fold_macro_f1_sd": 0.048371198873256464,
+  "folds": [
+    {
+      "fold": 1,
+      "n_candidates": 48,
+      "n_programs": 12,
+      "threshold": 0.25,
+      "inner_macro_f1": 0.7537050369706637,
+      "macro_f1": 0.6223776223776224,
+      "precision": 0.6296296296296297,
+      "recall": 0.68,
+      "specificity": 0.5652173913043478,
+      "mcc": 0.24694126062158486
+    },
+    {
+      "fold": 2,
+      "n_candidates": 49,
+      "n_programs": 12,
+      "threshold": 0.25,
+      "inner_macro_f1": 0.718530931423192,
+      "macro_f1": 0.7329140461215933,
+      "precision": 0.7619047619047619,
+      "recall": 0.6666666666666666,
+      "specificity": 0.8,
+      "mcc": 0.4714045207910317
+    },
+    {
+      "fold": 3,
+      "n_candidates": 49,
+      "n_programs": 12,
+      "threshold": 0.25,
+      "inner_macro_f1": 0.7348249299719888,
+      "macro_f1": 0.7132107023411371,
+      "precision": 0.7916666666666666,
+      "recall": 0.6785714285714286,
+      "specificity": 0.7619047619047619,
+      "mcc": 0.4360491817317043
+    },
+    {
+      "fold": 4,
+      "n_candidates": 48,
+      "n_programs": 12,
+      "threshold": 0.25,
+      "inner_macro_f1": 0.7258012696311931,
+      "macro_f1": 0.7386569872958257,
+      "precision": 0.7222222222222222,
+      "recall": 0.65,
+      "specificity": 0.8214285714285714,
+      "mcc": 0.4800793585191832
+    },
+    {
+      "fold": 5,
+      "n_candidates": 48,
+      "n_programs": 12,
+      "threshold": 0.25,
+      "inner_macro_f1": 0.7145381108988804,
+      "macro_f1": 0.7290490664350847,
+      "precision": 0.7391304347826086,
+      "recall": 0.7083333333333334,
+      "specificity": 0.75,
+      "mcc": 0.4587317109255645
+    }
+  ],
+  "weights_by_fold": [
+    {
+      "fold": 1,
+      "w_testdelta": 0.35,
+      "w_coveragedelta": 0.4,
+      "w_diffsize": 0.25,
+      "threshold": 0.25
+    },
+    {
+      "fold": 2,
+      "w_testdelta": 0.4,
+      "w_coveragedelta": 0.3,
+      "w_diffsize": 0.3,
+      "threshold": 0.25
+    },
+    {
+      "fold": 3,
+      "w_testdelta": 0.45,
+      "w_coveragedelta": 0.4,
+      "w_diffsize": 0.15,
+      "threshold": 0.25
+    },
+    {
+      "fold": 4,
+      "w_testdelta": 0.35,
+      "w_coveragedelta": 0.4,
+      "w_diffsize": 0.25,
+      "threshold": 0.25
+    },
+    {
+      "fold": 5,
+      "w_testdelta": 0.4,
+      "w_coveragedelta": 0.25,
+      "w_diffsize": 0.35,
+      "threshold": 0.25
+    }
+  ],
+  "interpretation": "Labels and features are synthetically generated from the distributions documented in the paper. This run validates the pipeline mechanics only; it does not estimate real patch performance."
+}

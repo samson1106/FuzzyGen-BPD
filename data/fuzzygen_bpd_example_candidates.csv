@@ -1,0 +1,5 @@
+vulnerability_id,candidate_id,TestDelta,CoverageDelta,DiffSize,build_pass,pov_pass,functional_pass
+VUL-DEMO-01,Candidate A,0.22,0.035,0.10,true,true,true
+VUL-DEMO-01,Candidate B,0.08,0.060,0.38,true,true,true
+VUL-DEMO-01,Candidate C,0.40,0.012,0.04,true,true,true
+VUL-DEMO-01,Candidate D,0.55,0.120,0.20,true,true,true

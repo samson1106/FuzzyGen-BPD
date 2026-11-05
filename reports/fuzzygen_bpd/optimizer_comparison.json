@@ -1,0 +1,463 @@
+{
+  "status": "SYNTHETIC DEMONSTRATION ONLY; NOT PATCH EVAL OR VUL4J RESULTS",
+  "data_seed": 2026,
+  "candidates": 242,
+  "programs": 60,
+  "labels": {
+    "unacceptable": 121,
+    "acceptable": 121
+  },
+  "outer_folds": 15,
+  "inner_folds": 4,
+  "evaluations_per_optimizer_per_fold": 60,
+  "classification_and_ranking": {
+    "Random Search": {
+      "macro_f1": 0.7148711643870703,
+      "precision": 0.7131147540983607,
+      "recall": 0.71900826446281,
+      "specificity": 0.7107438016528925,
+      "mcc": 0.4297667431897361,
+      "confusion_matrix": [
+        [
+          258,
+          105
+        ],
+        [
+          102,
+          261
+        ]
+      ],
+      "top1": 0.7611111111111111,
+      "mrr": 0.8430555555555556,
+      "ndcg": 0.8612496285286413
+    },
+    "GA": {
+      "macro_f1": 0.6895873516584796,
+      "precision": 0.7065868263473054,
+      "recall": 0.650137741046832,
+      "specificity": 0.7300275482093664,
+      "mcc": 0.3813843074632532,
+      "confusion_matrix": [
+        [
+          265,
+          98
+        ],
+        [
+          127,
+          236
+        ]
+      ],
+      "top1": 0.7666666666666667,
+      "mrr": 0.8421296296296296,
+      "ndcg": 0.8550753527806237
+    },
+    "TPE": {
+      "macro_f1": 0.7037617644100382,
+      "precision": 0.7114285714285714,
+      "recall": 0.6859504132231405,
+      "specificity": 0.721763085399449,
+      "mcc": 0.4079752063507788,
+      "confusion_matrix": [
+        [
+          262,
+          101
+        ],
+        [
+          114,
+          249
+        ]
+      ],
+      "top1": 0.7777777777777778,
+      "mrr": 0.849537037037037,
+      "ndcg": 0.8634287193201999
+    },
+    "GP-BO": {
+      "macro_f1": 0.6954252857416755,
+      "precision": 0.7052023121387283,
+      "recall": 0.6721763085399449,
+      "specificity": 0.71900826446281,
+      "mcc": 0.3916142592136688,
+      "confusion_matrix": [
+        [
+          261,
+          102
+        ],
+        [
+          119,
+          244
+        ]
+      ],
+      "top1": 0.7666666666666667,
+      "mrr": 0.8435185185185186,
+      "ndcg": 0.8598430152426545
+    },
+    "SMAC": {
+      "macro_f1": 0.6680283312241131,
+      "precision": 0.6703910614525139,
+      "recall": 0.6611570247933884,
+      "specificity": 0.6749311294765841,
+      "mcc": 0.33612004113119537,
+      "confusion_matrix": [
+        [
+          245,
+          118
+        ],
+        [
+          123,
+          240
+        ]
+      ],
+      "top1": 0.7666666666666667,
+      "mrr": 0.8430555555555556,
+      "ndcg": 0.8539491990917611
+    },
+    "Equal-weight BPD": {
+      "macro_f1": 0.7146372724942323,
+      "precision": 0.7280701754385965,
+      "recall": 0.6859504132231405,
+      "specificity": 0.743801652892562,
+      "mcc": 0.4304730160461392,
+      "confusion_matrix": [
+        [
+          270,
+          93
+        ],
+        [
+          114,
+          249
+        ]
+      ],
+      "top1": 0.7666666666666667,
+      "mrr": 0.8430555555555556,
+      "ndcg": 0.8598322545960252
+    }
+  },
+  "cluster_bootstrap_95_ci": {
+    "Random Search": {
+      "macro_f1": [
+        0.6615230476447362,
+        0.7655427766165269
+      ],
+      "top1": [
+        0.6555555555555554,
+        0.8611111111111112
+      ],
+      "mrr": [
+        0.7652777777777778,
+        0.913888888888889
+      ],
+      "ndcg": [
+        0.7980834796398859,
+        0.9197336129006335
+      ]
+    },
+    "GA": {
+      "macro_f1": [
+        0.6351076713523237,
+        0.743101349770732
+      ],
+      "top1": [
+        0.6666666666666666,
+        0.8666666666666667
+      ],
+      "mrr": [
+        0.7703703703703704,
+        0.9138888888888889
+      ],
+      "ndcg": [
+        0.7958663267954683,
+        0.9132513429779319
+      ]
+    },
+    "TPE": {
+      "macro_f1": [
+        0.6434529373449048,
+        0.7601191366804522
+      ],
+      "top1": [
+        0.6722222222222222,
+        0.8722222222222222
+      ],
+      "mrr": [
+        0.7703587962962963,
+        0.9185300925925927
+      ],
+      "ndcg": [
+        0.7974053886394649,
+        0.921566197963771
+      ]
+    },
+    "GP-BO": {
+      "macro_f1": [
+        0.6432914807783265,
+        0.7441380542693216
+      ],
+      "top1": [
+        0.6611111111111111,
+        0.8611111111111112
+      ],
+      "mrr": [
+        0.7657291666666667,
+        0.9111226851851852
+      ],
+      "ndcg": [
+        0.7968385627151866,
+        0.9171792043459699
+      ]
+    },
+    "SMAC": {
+      "macro_f1": [
+        0.6142943126922609,
+        0.7182508545505982
+      ],
+      "top1": [
+        0.6722222222222222,
+        0.8611111111111112
+      ],
+      "mrr": [
+        0.7708217592592593,
+        0.9139120370370369
+      ],
+      "ndcg": [
+        0.7932312000444638,
+        0.9111084140409911
+      ]
+    },
+    "Equal-weight BPD": {
+      "macro_f1": [
+        0.6608894215662007,
+        0.7674481377334464
+      ],
+      "top1": [
+        0.6666666666666666,
+        0.8666666666666667
+      ],
+      "mrr": [
+        0.7666666666666667,
+        0.9152777777777777
+      ],
+      "ndcg": [
+        0.7941704779124344,
+        0.9193658104908206
+      ]
+    }
+  },
+  "fold_summary": [
+    {
+      "method": "Equal-weight BPD",
+      "macro_f1_mean": 0.7125524740233957,
+      "macro_f1_sd": 0.05294547730786701,
+      "mcc_mean": 0.4343456046836013,
+      "top1_mean": 0.7666666666666667,
+      "mrr_mean": 0.8430555555555554,
+      "ndcg_mean": 0.8593862589801817
+    },
+    {
+      "method": "GA",
+      "macro_f1_mean": 0.6857774747593239,
+      "macro_f1_sd": 0.06327397981757951,
+      "mcc_mean": 0.3872595498503416,
+      "top1_mean": 0.7666666666666667,
+      "mrr_mean": 0.8421296296296296,
+      "ndcg_mean": 0.8550753527806239
+    },
+    {
+      "method": "GP-BO",
+      "macro_f1_mean": 0.6913603474910207,
+      "macro_f1_sd": 0.06968098933021163,
+      "mcc_mean": 0.4042150211617182,
+      "top1_mean": 0.7666666666666667,
+      "mrr_mean": 0.8435185185185184,
+      "ndcg_mean": 0.860289010858498
+    },
+    {
+      "method": "Random Search",
+      "macro_f1_mean": 0.7123679609610559,
+      "macro_f1_sd": 0.04402835258720904,
+      "mcc_mean": 0.4361154558257612,
+      "top1_mean": 0.7611111111111111,
+      "mrr_mean": 0.8430555555555554,
+      "ndcg_mean": 0.8608036329127979
+    },
+    {
+      "method": "SMAC",
+      "macro_f1_mean": 0.6629527223849103,
+      "macro_f1_sd": 0.06676387848035584,
+      "mcc_mean": 0.3710098167641919,
+      "top1_mean": 0.7666666666666667,
+      "mrr_mean": 0.8430555555555554,
+      "ndcg_mean": 0.8543951947076044
+    },
+    {
+      "method": "TPE",
+      "macro_f1_mean": 0.702100856783669,
+      "macro_f1_sd": 0.05505418878563804,
+      "mcc_mean": 0.4232448359925585,
+      "top1_mean": 0.7777777777777778,
+      "mrr_mean": 0.8495370370370369,
+      "ndcg_mean": 0.8638747149360434
+    }
+  ],
+  "paired_program_wilcoxon_holm": [
+    {
+      "comparison": "Random Search vs GA",
+      "mean_macro_f1_delta": 0.028561264300428393,
+      "ci_low": 0.0010020866050929854,
+      "ci_high": 0.05775383500306522,
+      "wilcoxon_p": 0.06234605729939455,
+      "holm_adjusted_p": 0.8728448021915236
+    },
+    {
+      "comparison": "Random Search vs TPE",
+      "mean_macro_f1_delta": 0.012607548123095306,
+      "ci_low": -0.009736393795841985,
+      "ci_high": 0.036313093881737465,
+      "wilcoxon_p": 0.2586349864668577,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "Random Search vs GP-BO",
+      "mean_macro_f1_delta": 0.019387095663344157,
+      "ci_low": -0.002423098093570203,
+      "ci_high": 0.0412487532753425,
+      "wilcoxon_p": 0.06854372841439094,
+      "holm_adjusted_p": 0.8910684693870822
+    },
+    {
+      "comparison": "Random Search vs SMAC",
+      "mean_macro_f1_delta": 0.03683453486085066,
+      "ci_low": 0.008219626884052207,
+      "ci_high": 0.06549753480988968,
+      "wilcoxon_p": 0.022294984133483395,
+      "holm_adjusted_p": 0.3344247620022509
+    },
+    {
+      "comparison": "Random Search vs Equal-weight BPD",
+      "mean_macro_f1_delta": 0.013891673569372444,
+      "ci_low": -0.016848475959794357,
+      "ci_high": 0.04753817921302608,
+      "wilcoxon_p": 0.5127122684589716,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "GA vs TPE",
+      "mean_macro_f1_delta": -0.015953716177333085,
+      "ci_low": -0.046879848162654565,
+      "ci_high": 0.013351800375951928,
+      "wilcoxon_p": 0.4804616206643135,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "GA vs GP-BO",
+      "mean_macro_f1_delta": -0.00917416863708423,
+      "ci_low": -0.0369515375547879,
+      "ci_high": 0.018005148821184393,
+      "wilcoxon_p": 0.7215580202264732,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "GA vs SMAC",
+      "mean_macro_f1_delta": 0.008273270560422272,
+      "ci_low": -0.02099776190367116,
+      "ci_high": 0.03792486996582224,
+      "wilcoxon_p": 0.6399742930079497,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "GA vs Equal-weight BPD",
+      "mean_macro_f1_delta": -0.014669590731055943,
+      "ci_low": -0.04524431334381993,
+      "ci_high": 0.013570667458093422,
+      "wilcoxon_p": 0.3041355575504997,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "TPE vs GP-BO",
+      "mean_macro_f1_delta": 0.006779547540248854,
+      "ci_low": -0.022045366972308682,
+      "ci_high": 0.03490440838964785,
+      "wilcoxon_p": 0.43813382909959364,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "TPE vs SMAC",
+      "mean_macro_f1_delta": 0.024226986737755356,
+      "ci_low": -0.0033322201054125653,
+      "ci_high": 0.05255008093512184,
+      "wilcoxon_p": 0.12946688077583568,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "TPE vs Equal-weight BPD",
+      "mean_macro_f1_delta": 0.001284125446277143,
+      "ci_low": -0.0308878769579234,
+      "ci_high": 0.03571867452507932,
+      "wilcoxon_p": 0.9234328930172382,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "GP-BO vs SMAC",
+      "mean_macro_f1_delta": 0.017447439197506503,
+      "ci_low": -0.012027244027948617,
+      "ci_high": 0.046509848258563184,
+      "wilcoxon_p": 0.22487757906714334,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "GP-BO vs Equal-weight BPD",
+      "mean_macro_f1_delta": -0.0054954220939717096,
+      "ci_low": -0.03866413700734438,
+      "ci_high": 0.02893932594921122,
+      "wilcoxon_p": 0.5127763461995413,
+      "holm_adjusted_p": 1.0
+    },
+    {
+      "comparison": "SMAC vs Equal-weight BPD",
+      "mean_macro_f1_delta": -0.022942861291478215,
+      "ci_low": -0.05570774753002341,
+      "ci_high": 0.008367591395890528,
+      "wilcoxon_p": 0.17715860055696975,
+      "holm_adjusted_p": 1.0
+    }
+  ],
+  "weights": {
+    "Equal-weight BPD": {
+      "w_testdelta": 0.3333,
+      "w_coveragedelta": 0.3333,
+      "w_diffsize": 0.3333,
+      "threshold": 0.25
+    },
+    "GA": {
+      "w_testdelta": 0.4134,
+      "w_coveragedelta": 0.3246,
+      "w_diffsize": 0.262,
+      "threshold": 0.2412
+    },
+    "GP-BO": {
+      "w_testdelta": 0.4345,
+      "w_coveragedelta": 0.3206,
+      "w_diffsize": 0.2449,
+      "threshold": 0.2384
+    },
+    "Random Search": {
+      "w_testdelta": 0.4038,
+      "w_coveragedelta": 0.3407,
+      "w_diffsize": 0.2555,
+      "threshold": 0.2535
+    },
+    "SMAC": {
+      "w_testdelta": 0.4165,
+      "w_coveragedelta": 0.2799,
+      "w_diffsize": 0.3036,
+      "threshold": 0.2603
+    },
+    "TPE": {
+      "w_testdelta": 0.4512,
+      "w_coveragedelta": 0.35,
+      "w_diffsize": 0.1987,
+      "threshold": 0.2475
+    }
+  },
+  "method_note": "Random Search, GA, TPE, GP-BO and SMAC receive 60 evaluations per outer fold; equal-weight BPD is a baseline with its threshold tuned on inner folds. GP-BO uses a Gaussian-process expected-improvement surrogate; SMAC uses a random-forest expected-improvement surrogate; TPE uses independent Parzen density ratios. These are transparent lightweight implementations, not claims of bit-for-bit equivalence to Optuna, SMAC3, or scikit-optimize.",
+  "interpretation": "Synthetic data from the distributions described in the paper. Results test pipeline mechanics only; they do not estimate vulnerability-patch performance."
+}

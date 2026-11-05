@@ -1,0 +1,33 @@
+{
+  "status": "SYNTHETIC DEMONSTRATION ONLY; NOT PATCH EVAL OR VUL4J RESULTS",
+  "figure_1": "User-supplied FuzzyGen-BPD Research Framework Infographic.png",
+  "figures_generated": [
+    "Fig. 2",
+    "Fig. 3",
+    "Fig. 4",
+    "Fig. 5",
+    "Fig. 6",
+    "Fig. 7",
+    "Fig. 8"
+  ],
+  "additional_figures_generated": 6,
+  "consistency_summary": {
+    "inner_fold_sd": {
+      "Jcons": 0.045374731877559284,
+      "Jmean": 0.05302354119458996
+    },
+    "heldout_macro_f1": {
+      "Jcons": 0.7106480127060518,
+      "Jmean": 0.7051723131734886
+    }
+  },
+  "ablation_summary": {
+    "Without DiffSize": 0.7030453006196733,
+    "All features": 0.700564795938736,
+    "TestDelta only": 0.6903513298446033,
+    "Without TestDelta": 0.6482515089398045,
+    "Without CoverageDelta": 0.6412674153737875,
+    "CoverageDelta only": 0.6256100053823651,
+    "DiffSize only": 0.5683479717436383
+  }
+}
