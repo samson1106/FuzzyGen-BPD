@@ -50,7 +50,7 @@ BPD = wT * F(TestDelta) + wC * F(CoverageDelta) + wD * F(DiffSize)
 
 Feature weights are normalized to sum to 1. Any candidate that fails one of the three gates remains ineligible. Other candidates are ranked by ascending BPD within their vulnerability. The decision threshold labels disturbance and does not certify a patch.
 
-## Run the synthetic evaluation
+## Run the evaluation
 
 ```bash
 python scripts/run_fuzzygen_bpd_pipeline.py
