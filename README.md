@@ -4,6 +4,10 @@ FuzzyGen-BPD is a Streamlit prototype for ranking candidate vulnerability patche
 
 > **Research status:** The supplied paper reports a synthetic pipeline demonstration and leaves its Vul4J experiments unfinished. Included scores and charts are simulation results, not PatchEval or Vul4J findings. BPD is a ranking heuristic, not a security or correctness proof.
 
+## Try the app online
+
+Open the deployed [FuzzyGen-BPD Streamlit app](https://fuzzygen-bpd-6uuqc6akmrbbcnxp2app9op.streamlit.app/).
+
 ## Install and run
 
 Requires Python 3.10 or later. From the project root:
