@@ -35,8 +35,11 @@ The app accepts CSV files with these columns:
 | `build_pass` | Build gate result | true/false or 1/0 |
 | `pov_pass` | PoV gate result | true/false or 1/0 |
 | `functional_pass` | Functional-test gate result | true/false or 1/0 |
+| `patch_acceptable` | Independent patch-quality label used by uploaded-data optimizer charts | true/false or 1/0 |
 
-Example input: `data/fuzzygen_bpd_example_candidates.csv`. The four rows use the paper's worked feature example and illustrative gate values; they are not benchmark observations.
+Example input: `data/fuzzygen_bpd_example_candidates.csv`. The four rows use the paper's worked feature example and illustrative gate values; they are not benchmark observations and do not include acceptability labels. Add independently determined `patch_acceptable` values before using it to generate uploaded-data figures.
+
+The uploaded-data figure set requires `patch_acceptable` labels for both classes among eligible candidates. It generates plots from the uploaded rows and performs exploratory random-search and genetic-algorithm tuning with vulnerability-grouped cross-validation when multiple vulnerabilities are present (stratified candidate folds are used for a single vulnerability). These tuning results are not independent test-set findings. The original paper-example figure set remains separately selectable.
 
 PatchEval metadata is available as `data/patcheval_verified.csv`. It describes CVEs and repositories but does not include generated candidate patches, gate outcomes, measured BPD features, or independent acceptability labels. Those measurements cannot be inferred from the metadata alone. The included PatchEval source data is from [ByteDance/PatchEval](https://github.com/bytedance/PatchEval) and is distributed under Apache-2.0; see `data/PatchEval/LICENSE`.
 
@@ -48,7 +51,7 @@ The app uses the paper's illustrative trapezoidal membership functions and Sugen
 BPD = wT * F(TestDelta) + wC * F(CoverageDelta) + wD * F(DiffSize)
 ```
 
-Feature weights must be finite and nonnegative, with at least one positive value; they are normalized to sum to 1. Any candidate that fails one of the three gates remains ineligible. Other candidates are ranked by ascending BPD within their vulnerability. The decision threshold labels disturbance and does not certify a patch.
+Feature weights are normalized to sum to 1. Any candidate that fails one of the three gates remains ineligible. Other candidates are ranked by ascending BPD within their vulnerability. The decision threshold labels disturbance and does not certify a patch.
 
 ## Run the evaluation
 
@@ -79,6 +82,7 @@ The Streamlit app's **Research figure collection** includes the framework infogr
 ```text
 fuzzygen_bpd_app.py                         Streamlit interface
 src/fuzzygen_bpd.py                         Fuzzy membership and BPD scoring
+src/uploaded_figures.py                     Upload-specific charts and label-driven tuning
 scripts/run_fuzzygen_bpd_pipeline.py        Synthetic grouped evaluation
 scripts/compare_fuzzygen_optimizers.py      Five-optimizer comparison
 scripts/generate_fuzzygen_research_figures.py Figure generation
