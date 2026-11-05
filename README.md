@@ -2,7 +2,7 @@
 
 FuzzyGen-BPD is a Streamlit prototype for ranking candidate vulnerability patches by behavioral disturbance. It applies build, proof-of-vulnerability (PoV), and functional-test eligibility gates, then scores eligible candidates with fuzzy TestDelta, CoverageDelta, and DiffSize features.
 
-> **Research status:** The supplied paper reports a synthetic pipeline demonstration and leaves its Vul4J experiments unfinished. Included scores and charts are simulation results, not PatchEval or Vul4J findings. BPD is a ranking heuristic, not a security or correctness proof.
+> **Research status:** The supplied paper reports a synthetic pipeline demonstration and leaves its Vul4J experiments unfinished. Included scores and charts are simulation results, not PatchEval or Vul4J findings (Reference: https://github.com/bytedance/PatchEval). BPD is a ranking heuristic, not a security or correctness proof.
 
 ## Try the app online
 
