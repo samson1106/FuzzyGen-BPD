@@ -281,7 +281,10 @@ if __import__("os").path.exists(figure_manifest_path):
     selected_path, selected_description, selected_height = figures[selected_figure]
     st.caption(selected_description)
     if selected_path.lower().endswith(".png"):
-        st.image(selected_path, use_container_width=True)
+        if __import__("os").path.isfile(selected_path):
+            st.image(selected_path, use_container_width=True)
+        else:
+            st.info("The framework architecture image is not included in this repository.")
     else:
         try:
             with open(selected_path, encoding="utf-8") as selected_file:
