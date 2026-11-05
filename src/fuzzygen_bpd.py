@@ -32,6 +32,12 @@ def fuzzify(feature: str, value: float) -> float:
 
 
 def normalized_weights(raw_weights: tuple[float, float, float]) -> tuple[float, float, float]:
+    if len(raw_weights) != len(FEATURES):
+        raise ValueError(f"Expected exactly {len(FEATURES)} feature weights.")
+    if not all(np.isfinite(weight) for weight in raw_weights):
+        raise ValueError("Feature weights must be finite numbers.")
+    if any(weight < 0 for weight in raw_weights):
+        raise ValueError("Feature weights cannot be negative.")
     total = sum(raw_weights)
     if total <= 0:
         raise ValueError("At least one feature weight must be greater than zero.")
@@ -73,7 +79,10 @@ def validate_candidates(data: pd.DataFrame) -> pd.DataFrame:
         if mapped.isna().any():
             raise ValueError(f"{column} must contain true/false or 1/0 values.")
         result[column] = mapped.astype(bool)
-    if result[["vulnerability_id", "candidate_id"]].isna().any().any():
+    if result[["vulnerability_id", "candidate_id"]].isna().any().any() or any(
+        result[column].map(lambda value: isinstance(value, str) and not value.strip()).any()
+        for column in ("vulnerability_id", "candidate_id")
+    ):
         raise ValueError("Vulnerability and candidate identifiers cannot be blank.")
     if result.duplicated(["vulnerability_id", "candidate_id"]).any():
         raise ValueError("Candidate IDs must be unique within each vulnerability.")

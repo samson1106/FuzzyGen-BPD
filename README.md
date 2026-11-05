@@ -48,7 +48,7 @@ The app uses the paper's illustrative trapezoidal membership functions and Sugen
 BPD = wT * F(TestDelta) + wC * F(CoverageDelta) + wD * F(DiffSize)
 ```
 
-Feature weights are normalized to sum to 1. Any candidate that fails one of the three gates remains ineligible. Other candidates are ranked by ascending BPD within their vulnerability. The decision threshold labels disturbance and does not certify a patch.
+Feature weights must be finite and nonnegative, with at least one positive value; they are normalized to sum to 1. Any candidate that fails one of the three gates remains ineligible. Other candidates are ranked by ascending BPD within their vulnerability. The decision threshold labels disturbance and does not certify a patch.
 
 ## Run the evaluation
 
