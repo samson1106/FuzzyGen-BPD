@@ -253,43 +253,124 @@ if __import__("os").path.exists(optimizer_metrics_path):
                      column_config={c:st.column_config.NumberColumn(format="%.3f") for c in ["mean_macro_f1_delta","ci_low","ci_high","wilcoxon_p","holm_adjusted_p"]})
     st.caption(optimizer_eval["method_note"])
 
+def build_uploaded_figure_collection(results, threshold):
+    figures = {}
+    if len(results):
+        candidate_metrics = results.melt(
+            id_vars=["vulnerability_id", "candidate_id", "eligible", "decision"],
+            value_vars=list(FEATURES),
+            var_name="Feature",
+            value_name="Value",
+        )
+        feature_box = px.box(
+            candidate_metrics,
+            x="Feature",
+            y="Value",
+            color="Feature",
+            points="all",
+            title="Uploaded candidate feature distributions",
+        )
+        feature_box.update_layout(template="plotly_white", showlegend=False, height=420, margin=dict(t=60, l=10, r=10, b=20))
+        figures["Feature distributions"] = feature_box
+
+        score_hist = px.histogram(
+            results,
+            x="BPD",
+            color="decision",
+            color_discrete_map={"Lower disturbance": "#176b87", "Higher disturbance": "#c27b31", "Ineligible": "#9aa5b1"},
+            nbins=25,
+            title="BPD distribution for the uploaded CSV",
+        )
+        score_hist.add_vline(x=threshold, line_dash="dash", line_color="#d1684b", annotation_text=f"τ = {threshold:.2f}")
+        score_hist.update_layout(template="plotly_white", height=420, margin=dict(t=60, l=10, r=10, b=20), legend_title_text="Decision")
+        figures["BPD distribution"] = score_hist
+
+        if results["eligible"].any():
+            eligible = results[results["eligible"]].copy()
+            rank_chart = px.bar(
+                eligible.sort_values("BPD"),
+                x="candidate_id",
+                y="BPD",
+                color="vulnerability_id",
+                text_auto=".3f",
+                title="Eligible candidate ranking by uploaded data",
+            )
+            rank_chart.add_hline(y=threshold, line_dash="dash", line_color="#d1684b", annotation_text=f"τ = {threshold:.2f}")
+            rank_chart.update_layout(template="plotly_white", showlegend=False, height=420, margin=dict(t=60, l=10, r=10, b=20), xaxis_title="Candidate ID", yaxis_title="BPD")
+            figures["Eligible candidate ranking"] = rank_chart
+
+        gate_counts = pd.DataFrame(
+            [{"Gate": gate, "Count": int(results[gate].sum()) if gate in results.columns else 0} for gate in ["build_pass", "pov_pass", "functional_pass"]]
+        )
+        gate_chart = px.bar(gate_counts, x="Gate", y="Count", color="Gate", title="Gate pass counts in uploaded CSV")
+        gate_chart.update_layout(template="plotly_white", showlegend=False, height=360, margin=dict(t=60, l=10, r=10, b=20), xaxis_title="Gate", yaxis_title="Passing candidates")
+        figures["Gate pass counts"] = gate_chart
+
+        if "candidate_id" in results.columns:
+            pair_plot = px.scatter(
+                results,
+                x="CoverageDelta",
+                y="BPD",
+                color="eligible",
+                symbol="vulnerability_id",
+                size="DiffSize",
+                hover_name="candidate_id",
+                title="BPD vs CoverageDelta for uploaded candidates",
+                color_discrete_map={True: "#176b87", False: "#c27b31"},
+            )
+            pair_plot.update_layout(template="plotly_white", height=420, margin=dict(t=60, l=10, r=10, b=20), legend_title_text="Eligible")
+            figures["BPD vs CoverageDelta"] = pair_plot
+
+    return figures
+
 figure_manifest_path = "reports/fuzzygen_bpd/research_figure_manifest.json"
-if __import__("os").path.exists(figure_manifest_path):
-    with open(figure_manifest_path, encoding="utf-8") as figure_manifest_file:
-        figure_manifest = json.load(figure_manifest_file)
-    st.divider()
-    st.subheader("Research figure collection")
-    st.warning("All charts except the framework architecture use the paper-defined synthetic demonstration data. They are suitable for methodology and implementation figures, but must not be described as PatchEval or Vul4J findings.")
-    architecture_path = "/Users/ankitkumarsingh/Desktop/FuzzyGen-BPD Research Framework Infographic.png"
-    figures = {
-        "Fig. 1 · FuzzyGen-BPD: Framework Architecture": (architecture_path, "Complete workflow of the proposed system", 950),
-        "Fig. 2 · Fuzzy Membership Profiles of Patch Disturbance Features": ("reports/fuzzygen_bpd/fig_02_membership_profiles.html", "Low, Medium, and High membership curves", 500),
-        "Fig. 3 · Fuzzy Inference and Disturbance Score Transformation": ("reports/fuzzygen_bpd/fig_03_inference_transformation.html", "Input fuzzification and Sugeno crisp-output transformation", 500),
-        "Fig. 4 · Impact of Feature Weights on Candidate Patch Ranking": ("reports/fuzzygen_bpd/fig_04_weight_impact.html", "How learned feature emphasis changes candidate ordering", 540),
-        "Fig. 5 · Convergence Behaviour of Hyperparameter Optimization Algorithms": ("reports/fuzzygen_bpd/fig_05_optimizer_convergence.html", "GA, TPE, GP-BO, SMAC, and Random Search under an equal budget", 540),
-        "Fig. 6 · Comparison of Optimized Feature Weights Across Algorithms": ("reports/fuzzygen_bpd/fig_06_learned_weights.html", "Average learned weights for TestDelta, CoverageDelta, and DiffSize", 540),
-        "Fig. 7 · Performance–Consistency Trade-off in Weight Optimization": ("reports/fuzzygen_bpd/fig_07_performance_consistency.html", "Mean-only versus consistency-aware threshold selection", 540),
-        "Fig. 8 · Ablation Analysis of FuzzyGen-BPD Components": ("reports/fuzzygen_bpd/fig_08_ablation.html", "Contribution of the three fuzzy disturbance features", 560),
-        "Additional · Distribution of Patch Disturbance Features": ("reports/fuzzygen_bpd/additional_01_feature_distributions.html", "Synthetic distribution of TestDelta, CoverageDelta, and DiffSize", 500),
-        "Additional · Relationship Between BPD Scores and Patch Quality": ("reports/fuzzygen_bpd/additional_02_bpd_quality.html", "Held-out BPD score distribution by synthetic label", 500),
-        "Additional · Candidate Patch Ranking Across Optimization Strategies": ("reports/fuzzygen_bpd/additional_03_ranking_strategies.html", "A candidate set ranked by each search method", 520),
-        "Additional · Held-Out Performance Across Vulnerability Programs": ("reports/fuzzygen_bpd/additional_04_heldout_generalization.html", "Macro-F1 variation across grouped held-out folds", 520),
-        "Additional · Sensitivity of BPD Scores to Membership Function Parameters": ("reports/fuzzygen_bpd/additional_05_membership_sensitivity.html", "Local robustness diagnostic for fuzzy membership breakpoints", 500),
-        "Additional · Macro-F1 Performance Comparison Across Optimization Strategies": ("reports/fuzzygen_bpd/additional_06_macro_f1_comparison.html", "Mean grouped-fold Macro-F1 by method", 500),
-    }
-    selected_figure = st.selectbox("Choose a figure", list(figures), key="research_figure")
-    selected_path, selected_description, selected_height = figures[selected_figure]
-    st.caption(selected_description)
-    if selected_path.lower().endswith(".png"):
-        if __import__("os").path.isfile(selected_path):
-            st.image(selected_path, use_container_width=True)
+st.divider()
+st.subheader("Research figure collection")
+figure_source = st.radio("Figure source", ["Paper example", "Uploaded CSV"], horizontal=True, key="figure_source_campaign")
+if figure_source == "Paper example":
+    st.warning("These paper figures are static examples based on the manuscript's synthetic demonstration data. They are preserved for comparison only.")
+    if __import__("os").path.exists(figure_manifest_path):
+        with open(figure_manifest_path, encoding="utf-8") as figure_manifest_file:
+            figure_manifest = json.load(figure_manifest_file)
+        architecture_path = "/Users/ankitkumarsingh/Desktop/FuzzyGen-BPD Research Framework Infographic.png"
+        figures = {
+            "Fig. 1 · FuzzyGen-BPD: Framework Architecture": (architecture_path, "Complete workflow of the proposed system", 950),
+            "Fig. 2 · Fuzzy Membership Profiles of Patch Disturbance Features": ("reports/fuzzygen_bpd/fig_02_membership_profiles.html", "Low, Medium, and High membership curves", 500),
+            "Fig. 3 · Fuzzy Inference and Disturbance Score Transformation": ("reports/fuzzygen_bpd/fig_03_inference_transformation.html", "Input fuzzification and Sugeno crisp-output transformation", 500),
+            "Fig. 4 · Impact of Feature Weights on Candidate Patch Ranking": ("reports/fuzzygen_bpd/fig_04_weight_impact.html", "How learned feature emphasis changes candidate ordering", 540),
+            "Fig. 5 · Convergence Behaviour of Hyperparameter Optimization Algorithms": ("reports/fuzzygen_bpd/fig_05_optimizer_convergence.html", "GA, TPE, GP-BO, SMAC, and Random Search under an equal budget", 540),
+            "Fig. 6 · Comparison of Optimized Feature Weights Across Algorithms": ("reports/fuzzygen_bpd/fig_06_learned_weights.html", "Average learned weights for TestDelta, CoverageDelta, and DiffSize", 540),
+            "Fig. 7 · Performance–Consistency Trade-off in Weight Optimization": ("reports/fuzzygen_bpd/fig_07_performance_consistency.html", "Mean-only versus consistency-aware threshold selection", 540),
+            "Fig. 8 · Ablation Analysis of FuzzyGen-BPD Components": ("reports/fuzzygen_bpd/fig_08_ablation.html", "Contribution of the three fuzzy disturbance features", 560),
+            "Additional · Distribution of Patch Disturbance Features": ("reports/fuzzygen_bpd/additional_01_feature_distributions.html", "Synthetic distribution of TestDelta, CoverageDelta, and DiffSize", 500),
+            "Additional · Relationship Between BPD Scores and Patch Quality": ("reports/fuzzygen_bpd/additional_02_bpd_quality.html", "Held-out BPD score distribution by synthetic label", 500),
+            "Additional · Candidate Patch Ranking Across Optimization Strategies": ("reports/fuzzygen_bpd/additional_03_ranking_strategies.html", "A candidate set ranked by each search method", 520),
+            "Additional · Held-Out Performance Across Vulnerability Programs": ("reports/fuzzygen_bpd/additional_04_heldout_generalization.html", "Macro-F1 variation across grouped held-out folds", 520),
+            "Additional · Sensitivity of BPD Scores to Membership Function Parameters": ("reports/fuzzygen_bpd/additional_05_membership_sensitivity.html", "Local robustness diagnostic for fuzzy membership breakpoints", 500),
+            "Additional · Macro-F1 Performance Comparison Across Optimization Strategies": ("reports/fuzzygen_bpd/additional_06_macro_f1_comparison.html", "Mean grouped-fold Macro-F1 by method", 500),
+        }
+        selected_figure = st.selectbox("Choose a figure", list(figures), key="research_figure")
+        selected_path, selected_description, selected_height = figures[selected_figure]
+        st.caption(selected_description)
+        if selected_path.lower().endswith(".png"):
+            if __import__("os").path.isfile(selected_path):
+                st.image(selected_path, use_container_width=True)
+            else:
+                st.info("The framework architecture image is not included in this repository.")
         else:
-            st.info("The framework architecture image is not included in this repository.")
+            try:
+                with open(selected_path, encoding="utf-8") as selected_file:
+                    figure_html = selected_file.read()
+                components.html(figure_html, height=selected_height, scrolling=True)
+                st.download_button("Download this interactive figure", figure_html, __import__("os").path.basename(selected_path), "text/html")
+            except OSError:
+                st.info("This figure file is not available. Run `python scripts/generate_fuzzygen_research_figures.py` to regenerate it.")
     else:
-        try:
-            with open(selected_path, encoding="utf-8") as selected_file:
-                figure_html = selected_file.read()
-            components.html(figure_html, height=selected_height, scrolling=True)
-            st.download_button("Download this interactive figure", figure_html, __import__("os").path.basename(selected_path), "text/html")
-        except OSError:
-            st.info("This figure file is not available. Run `python scripts/generate_fuzzygen_research_figures.py` to regenerate it.")
+        st.info("Paper example figures are not available locally. Upload the research report assets or regenerate them with the script in `scripts/generate_fuzzygen_research_figures.py`.")
+else:
+    csv_figures = build_uploaded_figure_collection(results, threshold)
+    if not csv_figures:
+        st.info("Upload a valid CSV to generate figures from current candidate data.")
+    else:
+        selected_csv_figure = st.selectbox("Choose a figure", list(csv_figures), key="uploaded_csv_figure")
+        st.plotly_chart(csv_figures[selected_csv_figure], use_container_width=True)
