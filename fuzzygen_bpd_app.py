@@ -312,7 +312,11 @@ if figure_set == "Uploaded CSV":
             description, figure, height = figures[selected_figure]
             st.caption(description)
             figure.update_layout(height=height)
-            st.plotly_chart(figure, use_container_width=True)
+            st.plotly_chart(
+                figure,
+                use_container_width=True,
+                config={"responsive": True, "displaylogo": False},
+            )
 else:
     if not __import__("os").path.exists(figure_manifest_path):
         st.info(

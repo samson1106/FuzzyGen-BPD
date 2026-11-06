@@ -239,6 +239,16 @@ def _optimize(
 
 
 def _register(figures, name, description, figure, height=500):
+    figure.update_layout(
+        template="plotly_white",
+        autosize=True,
+        font={"family": "Arial, sans-serif", "size": 12, "color": "#243447"},
+        hoverlabel={"font": {"size": 12}},
+    )
+    if figure.layout.margin is None:
+        figure.update_layout(margin={"l": 64, "r": 36, "t": 84, "b": 64})
+    figure.update_xaxes(automargin=True, tickfont={"size": 10}, tickangle=-30)
+    figure.update_yaxes(automargin=True, tickfont={"size": 10})
     figures[name] = (description, figure, height)
 
 
@@ -322,6 +332,17 @@ def _add_membership_profiles(figures, data):
         template="plotly_white",
         title="Fuzzy membership profiles with uploaded candidate values",
         height=500,
+        margin={"l": 64, "r": 36, "t": 105, "b": 86},
+        legend={
+            "orientation": "h",
+            "x": 0.0,
+            "y": 1.12,
+            "xanchor": "left",
+            "yanchor": "bottom",
+            "entrywidth": 120,
+            "font": {"size": 10},
+            "tracegroupgap": 12,
+        },
     )
     _register(
         figures,
@@ -356,7 +377,41 @@ def _add_inference_figure(figures, data, feature_scores, optimization):
             "F_DiffSize": "Fuzzy DiffSize",
         },
     )
-    figure.update_layout(template="plotly_white", height=560)
+    figure.update_layout(
+        template="plotly_white",
+        height=600,
+        margin={"l": 24, "r": 190, "t": 100, "b": 36},
+        legend={
+            "orientation": "v",
+            "x": 0.80,
+            "y": 1.0,
+            "xanchor": "left",
+            "yanchor": "top",
+            "title": {"text": "Acceptability"},
+            "itemwidth": 110,
+            "itemsizing": "constant",
+            "font": {"size": 11},
+            "bgcolor": "rgba(255,255,255,0.85)",
+        },
+        scene={
+            "domain": {"x": [0.0, 0.78], "y": [0.0, 1.0]},
+            "camera": {"eye": {"x": 1.65, "y": 1.65, "z": 1.25}},
+            "aspectmode": "cube",
+            "xaxis": {"title": "Fuzzy TestDelta", "tickfont": {"size": 10}},
+            "yaxis": {"title": "Fuzzy CoverageDelta", "tickfont": {"size": 10}},
+            "zaxis": {"title": "Fuzzy DiffSize", "tickfont": {"size": 10}},
+        },
+    )
+    figure.update_traces(
+        marker_colorbar={
+            "x": 0.98,
+            "len": 0.72,
+            "thickness": 14,
+            "title": {"text": "BPD", "side": "right"},
+            "tickfont": {"size": 10},
+        },
+        selector={"type": "scatter3d"},
+    )
     _register(
         figures,
         "Fig. 3 · Fuzzy Inference and Disturbance Score Transformation",
@@ -383,6 +438,9 @@ def _add_weight_ranking_figure(
         scores = feature_scores @ weights
         method_rows = data[["vulnerability_id", "candidate_id"]].copy()
         method_rows["Method"] = method
+        method_rows["Acceptability"] = data[LABEL_COLUMN].map(
+            {0: "Unacceptable", 1: "Acceptable"}
+        )
         method_rows["Rank"] = (
             pd.Series(scores)
             .groupby(data["vulnerability_id"].reset_index(drop=True))
@@ -401,14 +459,20 @@ def _add_weight_ranking_figure(
         plotted,
         x="Method",
         y="Rank",
-        color="Candidate",
+        color="Acceptability",
         line_group="Candidate",
         markers=True,
         hover_data=["vulnerability_id", "candidate_id"],
+        color_discrete_map={"Unacceptable": "#c27b31", "Acceptable": "#176b87"},
         title="Uploaded candidate ranking under alternative feature weights",
     )
     figure.update_yaxes(autorange="reversed", title="Rank within vulnerability")
-    figure.update_layout(template="plotly_white", height=560, legend_title_text="Candidate")
+    figure.update_layout(
+        template="plotly_white",
+        height=560,
+        legend_title_text="Acceptability",
+        hovermode="closest",
+    )
     _register(
         figures,
         "Fig. 4 · Impact of Feature Weights on Candidate Patch Ranking",
@@ -610,6 +674,12 @@ def _add_strategy_ranking_figure(figures, data, feature_scores, optimization):
     }
     weights["Equal-weight baseline"] = np.full(3, 1 / 3)
     rows = []
+    vulnerability_labels = {
+        vulnerability: f"Vulnerability {index + 1}"
+        for index, vulnerability in enumerate(
+            data["vulnerability_id"].drop_duplicates().tolist()
+        )
+    }
     for method, method_weights in weights.items():
         ranks = (
             pd.Series(feature_scores @ method_weights)
@@ -620,24 +690,60 @@ def _add_strategy_ranking_figure(figures, data, feature_scores, optimization):
         for index, row in data.iterrows():
             rows.append(
                 {
-                    "Vulnerability": row["vulnerability_id"],
-                    "Candidate": row["candidate_id"],
+                    "Vulnerability": vulnerability_labels[row["vulnerability_id"]],
+                    "Vulnerability ID": row["vulnerability_id"],
+                    "Candidate ID": row["candidate_id"],
                     "Method": method,
                     "Rank": int(ranks.iloc[index]),
                 }
             )
+    plotted = pd.DataFrame(rows)
+    candidate_labels = (
+        plotted[["Vulnerability", "Candidate ID"]]
+        .drop_duplicates()
+        .assign(
+            Candidate=lambda frame: frame.groupby("Vulnerability", sort=False)
+            .cumcount()
+            .add(1)
+            .map(lambda index: f"C{index:02d}")
+        )
+    )
+    plotted = plotted.merge(
+        candidate_labels, on=["Vulnerability", "Candidate ID"], how="left"
+    )
+    vulnerability_count = plotted["Vulnerability"].nunique()
+    candidates_per_vulnerability = candidate_labels.groupby("Vulnerability").size()
+    chart_height = min(
+        1800,
+        max(480, 120 * vulnerability_count + 30 * candidates_per_vulnerability.max()),
+    )
     figure = px.bar(
-        pd.DataFrame(rows),
-        x="Candidate",
-        y="Rank",
+        plotted,
+        x="Rank",
+        y="Candidate",
         color="Method",
         barmode="group",
-        facet_col="Vulnerability",
+        orientation="h",
+        facet_row="Vulnerability",
+        hover_data=["Vulnerability ID", "Candidate ID", "Method", "Rank"],
         title="Uploaded candidates ranked by each optimized strategy",
         color_discrete_map={**COLORS, "Equal-weight baseline": "#65499b"},
     )
-    figure.update_yaxes(autorange="reversed")
-    figure.update_layout(template="plotly_white", height=480)
+    figure.update_xaxes(autorange="reversed", title_text="Rank within vulnerability")
+    figure.update_yaxes(categoryorder="category ascending", title_text="")
+    figure.update_layout(
+        template="plotly_white",
+        height=chart_height,
+        margin={"l": 70, "r": 36, "t": 100, "b": 54},
+        legend={
+            "orientation": "h",
+            "x": 0,
+            "y": 1.08,
+            "xanchor": "left",
+            "yanchor": "bottom",
+            "font": {"size": 10},
+        },
+    )
     _register(
         figures,
         "Additional · Candidate Patch Ranking Across Optimization Strategies",
