@@ -79,6 +79,8 @@ class UploadedFiguresTests(unittest.TestCase):
         self.assertEqual(inference.layout.legend.title.text, "Acceptability")
         self.assertGreater(inference.layout.margin.r, 100)
         self.assertEqual(inference.layout.scene.aspectmode, "cube")
+        self.assertLess(inference.layout.scene.domain.x[1], inference.layout.coloraxis.colorbar.x)
+        self.assertGreater(inference.layout.legend.x, inference.layout.coloraxis.colorbar.x)
         self.assertEqual(
             {trace.name for trace in inference.data},
             {"Acceptable", "Unacceptable"},
@@ -89,21 +91,35 @@ class UploadedFiguresTests(unittest.TestCase):
         ][1]
         self.assertTrue(strategy_ranking.layout.autosize)
         self.assertEqual(strategy_ranking.data[0].orientation, "h")
+        self.assertEqual(strategy_ranking.layout.legend.orientation, "h")
+        self.assertGreater(strategy_ranking.layout.margin.l, 100)
         self.assertTrue(
             all(
-                candidate.startswith("C")
+                len(candidate) <= 24
                 for trace in strategy_ranking.data
                 for candidate in trace.y
+            )
+        )
+        self.assertTrue(
+            all(
+                len(candidate_id) > 24
+                for trace in strategy_ranking.data
+                for candidate_id in trace.customdata[:, 1]
             )
         )
 
         weight_ranking = figures[
             "Fig. 4 · Impact of Feature Weights on Candidate Patch Ranking"
         ][1]
-        self.assertEqual(weight_ranking.layout.legend.title.text, "Acceptability")
+        self.assertEqual(weight_ranking.layout.legend.title.text, "Ranking method")
         self.assertEqual(
             {trace.name for trace in weight_ranking.data},
-            {"Acceptable", "Unacceptable"},
+            {
+                "Random Search",
+                "Genetic Algorithm",
+                "Equal weights",
+                "Current UI weights",
+            },
         )
 
     def test_requires_both_labels_among_eligible_candidates(self):
