@@ -60,6 +60,31 @@ class UploadedFiguresTests(unittest.TestCase):
         figures = generate_uploaded_figures(results, (0.6, 0.2, 0.2))
 
         self.assertEqual(len(figures), 14)
+        membership = figures[
+            "Fig. 2 · Fuzzy Membership Profiles of Patch Disturbance Features"
+        ][1]
+        self.assertEqual(
+            {
+                trace.name
+                for trace in membership.data
+                if trace.showlegend is True and trace.legend != "legend2"
+            },
+            {"Low / Small", "Medium", "High / Large"},
+        )
+        self.assertEqual(
+            {
+                trace.name
+                for trace in membership.data
+                if trace.showlegend is True and trace.legend == "legend2"
+            },
+            {"Acceptable", "Unacceptable"},
+        )
+        self.assertEqual(membership.layout.legend.orientation, "v")
+        self.assertEqual(membership.layout.legend2.orientation, "v")
+        self.assertGreater(membership.layout.margin.r, 100)
+        self.assertGreater(
+            membership.layout.legend.y, membership.layout.legend2.y
+        )
         for title in (
             "Fig. 2 · Fuzzy Membership Profiles of Patch Disturbance Features",
             "Fig. 3 · Fuzzy Inference and Disturbance Score Transformation",
